@@ -1,0 +1,35 @@
+.title {
+  text-align: center;
+  margin: 0 0 10px 0;
+  font-size: 120%;
+}
+
+.subtitle {
+  text-align: center;
+  margin: 20px 0 0 0;
+  font-size: 120%;
+}
+
+h3 {
+  margin: 10px 0 5px 10px;
+  font-size: 100%;
+  font-weight: normal;
+}
+
+/* display boxes */
+.base-container {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.base-box {
+  margin: 5px;
+}
+
+.home-categories {
+  justify-content: center;
+}
+
+.home-products {
+  margin-left: 10px;
+}

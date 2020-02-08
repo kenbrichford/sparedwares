@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% load static mptt_tags %}
+
+{% block title %}{% if category.is_leaf_node %}{{ category.get_ancestors|tree_path:': ' }}:{% endif %} {{ category }}{% endblock %}
+{% block description %}{{ category.name }}{% if category.name|slice:'-1:' != 's' %}s{% endif %}{% endblock %}
+
+
+{% block extra_css %}
+  <link rel='stylesheet' type='text/css' href='{% static "products/css/style.css" %}' />
+{% endblock %}
+
+{% block content %}
+  <div id='crumbs'>
+    <a href='{% url "categories" %}'>All</a>
+    <span>&rsaquo;</span>
+    {% for parent in category.get_ancestors %}
+      <a href='{% url "category" parent.slug %}'>{{ parent }}</a>
+      <span>&rsaquo;</span>
+    {% endfor %}
+    {{ category }}
+  </div>
+
+  {% if children %}
+    <h2 class='title'>Categories</h2>
+    <ul>
+      <li class='category-name'>{{ category }}</li>
+      <hr />
+      <ul class='children'>
+        {% recursetree children %}
+          <li>
+            <a class='category-name' href='{% url "category" node.slug %}'>
+              {{ node }}
+            </a>
+            <hr />
+            <ul class='children'>{{ children }}</ul>
+          </li>
+        {% endrecursetree %}
+      </ul>
+    </ul>
+  {% endif %}
+
+  {% if products %}
+    <h2 class='title'>Products</h2>
+    <ul>
+      {% recursetree products %}
+        {% if node.is_leaf_node %}
+          <div class='base-box'>
+            <a href='{% url "product" node.category.slug node.slug %}'>
+              <div class='base-image'>
+                <img src='{% if node.image %}{{ node.image.url }}{% else %}{% static "img/noimage.png" %}{% endif %}' />
+              </div>
+              {{ node }}
+            </a>
+          </div>
+        {% else %}
+          <li>
+            <a class='category-name' href='{% url "product" node.category.slug node.slug %}'>
+              {{ node }}
+            </a>
+            <hr />
+            <ul class='children'>{{ children }}</ul>
+          </li>
+        {% endif %}
+      {% endrecursetree %}
+    </ul>
+  {% endif %}
+{% endblock %}

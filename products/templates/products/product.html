@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% load static mptt_tags %}
+
+{% block title %}{{ product.name }}{% endblock %}
+{% block description %}{{ product.name }}{% if product.name|slice:'-1:' != 's' %}s{% endif %}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel='stylesheet' type='text/css' href='{% static "products/css/style.css" %}' />
+{% endblock %}
+
+{% block content %}
+  <div id='crumbs'>
+    <a href='{% url "categories" %}'>All</a>
+    <span>&rsaquo;</span>
+    {% for category in product.category.get_ancestors %}
+      <a href='{% url "category" category.slug %}'>
+        {{ category }}
+      </a>
+      <span>&rsaquo;</span>
+    {% endfor %}
+    <a href='{% url "category" product.category.slug %}'>
+      {{ product.category }}
+    </a>
+    <span>&rsaquo;</span>
+    {% for parent in product.get_ancestors %}
+      <a href='{% url "product" parent.category.slug parent.slug %}'>
+        {{ parent }}
+      </a>
+      <span>&rsaquo;</span>
+    {% endfor %}
+    {{ product }}
+  </div>
+
+  <form id='filter-form' method='get'>
+    <div id='item-sort'>
+      <select id='sort-items' name='sort'>
+        <option selected disabled>Sort Results</option>
+        <option value='best'>Best Match</option>
+        <option value='price'>Lowest Fixed Price</option>
+        <option value='-price'>Highest Fixed Price</option>
+        <option value='time'>Ending Auctions</option>
+        <option value='-time'>New Fixed Listings</option>
+      </select>
+
+      <button type='button' id='show-filter-btn'>Show Filters</button>
+    </div>
+
+    <div id='item-filters'>
+      <div class='filter-wrap'>
+        <input id='keyword-filter' type='search' name='keywords' placeholder='Narrow Results' />
+      </div>
+
+      <div class='filter-wrap'>
+        <label>
+          <input type='checkbox' name='strict' value='false' />
+          Show More Results
+        </label>
+      </div>
+
+      {% if models %}
+        <div class='filter-wrap'>
+          Model
+          <ul>
+            {% for model in models %}
+              <li>
+                <label>
+                  <input type='checkbox' name='model' value='{{ model.slug }}' />
+                  {{ model }}
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% regroup filters by group as filter_groups %}
+      {% for group in filter_groups %}
+        <div class='filter-wrap'>
+          {{ group.grouper }}
+          <ul>
+            {% for filter in group.list %}
+              <li>
+                <label>
+                  <input type='checkbox' name='{{ filter.group.slug }}' value='{{ filter.slug }}' />
+                  {{ filter.value }}
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+
+      <div id='filter-button'>
+        <button form='filter-form'>Apply Filters</button>
+      </div>
+    </div>
+  </form>
+
+  <div id='item-results'>
+    {{ items.count }}
+    {% if items.count == 1 %}Result{% else %}Results{% endif %}
+  </div>
+
+  {% if items.count > 0 %}
+    <div id='disclaimer'>
+      <em>
+        Note: When you click on an eBay link below and make a purchase, this site may earn a commission through its affiliation with the eBay Partner Network.
+      </em>
+    </div>
+  {% elif items.count == 0 %}
+    <div id='no-result'><strong>No Results Found. Please try again.</strong></div>
+  {% endif %}
+
+  <div id='item-container'>{% include 'products/results.html' %}</div>
+
+  {% if items.count > 20 %}
+    <input type='hidden' id='page' value=2 />
+    <div id='load-more'><button>Load More Results</button></div>
+  {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script type='text/javascript'>
+    var path = '/ajax/{{ product.category.slug }}/{{ product.slug }}';
+    var query = JSON.parse('{{ query|safe }}');
+    var results = '{{ items.count }}';
+  </script>
+  <script type='text/javascript' src='{% static "products/js/script.js" %}'></script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% load static %}
+
+{% if items.error %}
+  <p id='error'>There's seems to have been a problem with your request. Please try again later.</p>
+{% else %}
+  {% for item in items.list %}
+    <div class='item-box'>
+      <div class='item-gallery'>
+        {% for image in item.images %}
+          <div class='gallery-image'><img src='{{ image }}' /></div>
+        {% endfor %}
+      </div>
+
+      <div class='item-title'>
+        <a href='{{ item.url }}' target='_blank'>
+          <strong>{{ item.type }}: </strong>{{ item.title }}
+        </a>
+      </div>
+
+      <div class='detail-row'>
+        <div class='item-price'>
+          ${{ item.price }} + {{ item.shipping }} shipping
+        </div>
+        <div class='item-condition'>{{ item.condition }}</div>
+      </div>
+
+      <div class='detail-row'>
+        <div class='seller-name'>{{ item.seller.name }}</div>
+        <div class='seller-score'>
+          {{ item.seller.percent }}% ({{ item.seller.ratings }} ratings)
+        </div>
+      </div>
+
+      <div class='detail-row'>
+        <div class='item-location'>{{ item.location }}</div>
+        <div class='item-end'>{{ item.end }}</div>
+      </div>
+
+      {% if item.text %}
+        <div class='item-text'>{{ item.text }}</div>
+
+        <div class='text-btn-wrap'>
+          <button class='text-btn' type='button'>Show Text</button>
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endif %}

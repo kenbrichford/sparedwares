@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html class='no-js'>
+<head>
+  <meta charset='utf-8' />
+  <title>{% block title %}{% endblock %} | SparedWares</title>
+  <meta name='description' content='Deals on new, used, and refurbished {% block description %}{% endblock %} for sale by real people. Save some money and help save the world by buying secondhand.' />
+  <meta name='viewport' content='width=device-width, initial-scale=1' />
+
+  <link rel="apple-touch-icon" sizes="180x180" href='{% static "img/favicon/apple-touch-icon.png" %}'>
+  <link rel="icon" type="image/png" sizes="32x32" href='{% static "img/favicon/favicon-32x32.png" %}'>
+  <link rel="icon" type="image/png" sizes="16x16" href='{% static "img/favicon/favicon-16x16.png" %}'>
+  <link rel="manifest" href='{% static "img/favicon/site.webmanifest" %}'>
+  <link rel="mask-icon" href='{% static "img/favicon/safari-pinned-tab.svg" %}' color="#666666">
+  <meta name="msapplication-TileColor" content="#f8f8f8">
+  <meta name="theme-color" content="#666666">
+
+  {% if request.META.HTTP_HOST == 'www.sparedwares.com' %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-80074533-3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-80074533-3');
+    </script>
+  {% endif %}
+
+  <link rel='stylesheet' type='text/css' href='{% static "css/style.css" %}'>
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+  <header>
+    <a id='home-link' href='{% url "home" %}'>Home</a>
+    <a href='{% url "categories" %}'>Categories</a>
+  </header>
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <div id='up-arrow'><img src='{% static "img/arrow.png" %}' /></div>
+
+  <footer>Copyright © {% now 'Y' %} SparedWares.com. All rights reserved.</footer>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type='text/javascript' src='{% static "js/script.js" %}'></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

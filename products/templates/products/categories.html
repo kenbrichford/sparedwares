@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load static mptt_tags %}
+
+{% block title %}Categories{% endblock %}
+{% block description %}goods in popular categories{% endblock %}
+
+{% block extra_css %}
+  <link rel='stylesheet' type='text/css' href='{% static "products/css/style.css" %}' />
+{% endblock %}
+
+{% block content %}
+  <div id='crumbs'>All</div>
+
+  {% for category in categories %}
+    <div class='base-box'>
+      <a href='{% url "category" category.slug %}'>
+        <div class='base-image'>
+          <img src='{% if category.image %}{{ category.image.url }}{% else %}{% static "img/noimage.png" %}{% endif %}' />
+        </div>
+        {{ category }}
+      </a>
+    </div>
+  {% endfor %}
+{% endblock %}

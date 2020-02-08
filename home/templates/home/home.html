@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load static mptt_tags %}
+
+{% block title %}Save some money. Save the world.{% endblock %}
+{% block description %}brand name goods{% endblock %}
+
+{% block extra_css %}
+  <link rel='stylesheet' type='text/css' href='{% static "home/css/style.css" %}' />
+{% endblock %}
+
+{% block content %}
+  <h1 class='title'>Save some money. Save the world.</h1>
+  <div class='base-container home-categories'>
+    {% for category in categories %}
+      <div class='base-box'>
+        <a href='{% url "category" category.slug %}'>
+          <div class='base-image'>
+            <img src='{% if category.image %}{{ category.image.url }}{% else %}{% static "img/noimage.png" %}{% endif %}' />
+          </div>
+          {{ category.name }}
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h2 class='subtitle'>Featured Products</h2>
+  {% regroup products by category.get_root as product_groups %}
+  {% for group in product_groups %}
+    <h3>{{ group.grouper }}</h3>
+    <hr />
+    <div class='base-container home-products'>
+      {% for product in group.list %}
+        <div class='base-box'>
+          <a href='{% url "product" product.category.slug product.slug %}'>
+            <div class='base-image'>
+              <img src='{% if product.image %}{{ product.image.url }}{% else %}{% static "img/noimage.png" %}{% endif %}' />
+            </div>
+            {{ product.name }}
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+{% endblock %}
