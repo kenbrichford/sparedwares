@@ -9,3 +9,4 @@ dev.py
 db.sqlite3
 /cache
 .vscode/
+test.py
