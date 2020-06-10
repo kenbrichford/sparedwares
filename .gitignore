@@ -1,9 +1,11 @@
 *.pyc
 *~
 __pycache__
+env
 .env
 .DS_Store
 dev.py
 /media
 db.sqlite3
 /cache
+.vscode/
