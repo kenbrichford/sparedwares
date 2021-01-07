@@ -11,7 +11,7 @@ ebaysdk==2.2.0
 geoip2==3.0.0
 gunicorn==20.0.4
 idna==2.8
-lxml==4.5.0
+lxml==4.6.2
 maxminddb==1.5.2
 mock==4.0.1
 Pillow==7.0.0
